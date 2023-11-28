@@ -16,6 +16,16 @@ export default {
       movies: []
     }
   },
+
+  computed: {
+    topMovies() {
+      var m = this.movies.filter((movie) => ! this.$route.query.location || this.$route.query.location in movie.showtimes);
+      return m.filter((movie) => movie.imdb_rating >= 7);
+    },
+
+  },
+
+
   mounted() {
     axios.get('https://grouplimit.co/api/v1/cinema/LFZHAia7t0NjjJ62F2pB')
         .then((response) => {
@@ -46,25 +56,31 @@ export default {
     <dropdown class="ml-2"  placement="bottom" text="Staður">
       <list-group>
         <list-group-item class="p-3">
-          <RouterLink to="/home">Allir</RouterLink>
+          <RouterLink to="">Allar</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Sambíóin Kringlunni">Sambíóin Kringlunni</RouterLink>
+          <RouterLink to="?location=Bíó Paradís">Bíó Paradís</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Sambíóin Álfabakka">Sambíóin Álfabakka</RouterLink>
+          <RouterLink to="?location=Sambíóin Kringlunni">Sambíóin Kringlunni</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Sambíóin Egilshöll">Sambíóin Egilshöll</RouterLink>
+          <RouterLink to="?location=Sambíóin Egilshöll">Sambíóin Egilshöll</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Sambíóin Akureyri">Sambíóin Akureyri</RouterLink>
+          <RouterLink to="?location=Sambíóin Akureyri">Sambíóin Akureyri</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Sambíó">Sambíó</RouterLink>
+          <RouterLink to="?location=Sambíó">Sambíó</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?location=Laugarásbíó">Laugarásbíó</RouterLink>
+          <RouterLink to="?location=Smárabíó">Smárabíó</RouterLink>
+        </list-group-item>
+        <list-group-item class="p-3">
+          <RouterLink to="?location=Laugarásbíó">Laugarásbíó</RouterLink>
+        </list-group-item>
+        <list-group-item class="p-3">
+          <RouterLink to="?location=Sambíóin Álfabakka">Sambíóin Álfabakka</RouterLink>
         </list-group-item>
       </list-group>
     </dropdown>
@@ -73,37 +89,37 @@ export default {
     <dropdown class="ml-2" placement="bottom" text="Frumsýnd klukkan">
       <list-group>
         <list-group-item class="p-3">
-          <RouterLink to="/home">Allar</RouterLink>
+          <RouterLink to="">Allar</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=13">Frá 13:00</RouterLink>
+          <RouterLink to="?from=13">Frá 13:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=14">Frá 14:00</RouterLink>
+          <RouterLink to="?from=14">Frá 14:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=15">Frá 15:00</RouterLink>
+          <RouterLink to="?from=15">Frá 15:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=16">Frá 16:00</RouterLink>
+          <RouterLink to="?from=16">Frá 16:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=17">Frá 17:00</RouterLink>
+          <RouterLink to="?from=17">Frá 17:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=18">Frá 18:00</RouterLink>
+          <RouterLink to="?from=18">Frá 18:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=19">Frá 19:00</RouterLink>
+          <RouterLink to="?from=19">Frá 19:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=20">Frá 20:00</RouterLink>
+          <RouterLink to="?from=20">Frá 20:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=21">Frá 21:00</RouterLink>
+          <RouterLink to="?from=21">Frá 21:00</RouterLink>
         </list-group-item>
         <list-group-item class="p-3">
-          <RouterLink to="/home?from=22">Frá 22:00</RouterLink>
+          <RouterLink to="?from=22">Frá 22:00</RouterLink>
         </list-group-item>
       </list-group>
     </dropdown>
@@ -115,12 +131,12 @@ export default {
   <div class="about">
     <p>{{name}}</p>
     <div class="row w-full flex flex-wrap">
-      <div class="page mb-6 w-1/3" v-for="movie in movies">
+      <div class="page mb-6 w-1/2" v-for="movie in topMovies">
         <div class="bio bg intro flex justify-start bg-white p-3 ml-2 border-2 border-black">
           <img class="poster" :src="movie.poster" alt="Italian Trulli">
           <div class="ml-2 flex-1">
             <div class="flex justify-between items-center">
-              <strong class="mr-4 hover:text-blue-500 text-xl">{{ movie.name }} ({{ movie.year }})</strong>
+              <strong class="mr-4 hover:text-blue-500 hover:underline text-xl">{{ movie.name }} ({{ movie.year }})</strong>
 
               <p class="rating"> {{ movie.imdb_rating }} </p>
             </div>
@@ -131,11 +147,8 @@ export default {
 
             <div class="mb-6" v-for="(showtime, name) in movie.showtimes">
               <p v-if=" ! $route.query.location">{{ name }}</p>
-              <strong><p v-if="name == $route.query.location">{{ name }}</p></strong>
 
-              <div v-if=" movie.imdb_rating >= 7">
-                <strong>{{ show.time }} - {{ show.location }}</strong>
-              </div>
+              <strong><p v-if="name == $route.query.location">{{ name }}</p></strong>
 
               <div v-for=" show in showtime" v-if="$route.query.location == null">
                 <div v-if=" ! $route.query.from">
@@ -145,8 +158,8 @@ export default {
                 <div v-if="show.time.substring(0,2) >= $route.query.from">
                   <strong>{{ show.time }} - {{ show.location }}</strong>
                 </div>
-              </div>
 
+              </div>
               <div v-for=" show in showtime" v-else-if="name == $route.query.location">
                 <div v-if=" ! $route.query.from">
                   {{ show.time }} - {{ show.location }}
